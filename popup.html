@@ -1,12 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Instagram Helper</title>
-  <link rel="stylesheet" type="text/css" href="styles/popup.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Helper</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <h1>Instagram Helper</h1>
-  <button id="activateButton">Activate on Instagram</button>
-  <script src="scripts/popup.js"></script>
+    <h2>Instagram Helper</h2>
+    <input type="text" id="username" placeholder="Enter username">
+    <textarea id="message" rows="4" placeholder="Enter your message"></textarea>
+    <button id="sendButton">Send Message</button>
+    <script src="./scripts/popup.js"></script>
 </body>
 </html>
