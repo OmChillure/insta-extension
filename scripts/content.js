@@ -1,4 +1,3 @@
-// Helper functions
 function findElementsByText(text, selector = "*") {
   const elements = document.querySelectorAll(selector);
   return Array.from(elements).filter((element) =>
@@ -139,6 +138,30 @@ function simulateTyping(message, initialDelay = 2000, typingDelay = 100) {
   });
 }
 
+async function getAllFollowerUsernames() {
+  async function scrollToLoadAll() {
+      let lastHeight;
+      do {
+          lastHeight = document.body.scrollHeight;
+          window.scrollBy(0, window.innerHeight); 
+          await new Promise(resolve => setTimeout(resolve, 5000)); 
+      } while (document.body.scrollHeight > lastHeight);
+  }
+
+  function extractUsernames() {
+      return Array.from(document.querySelectorAll('div[role="button"]:not([aria-label]):not([aria-pressed])'))
+          .map(button => {
+              const container = button.closest('div[class^="x9f619"]');
+              const link = container?.querySelector('a[href^="/"][role="link"]');
+              return link ? link.getAttribute('href').substring(1) : null;
+          })
+          .filter(Boolean);
+  }
+
+  await scrollToLoadAll();
+  return extractUsernames();
+}
+
 async function runInstagramActions(username, message) {
   try {
     console.log("Searching for New Message button...");
@@ -220,3 +243,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 console.log("Instagram Helper content script loaded for DM inbox");
+
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'getFollowers') {
+      getAllFollowerUsernames().then(followerUsernames => {
+          sendResponse({ followers: followerUsernames });
+      });
+      return true;
+  }
+});
