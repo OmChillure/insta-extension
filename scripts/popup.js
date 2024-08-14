@@ -21,7 +21,6 @@ document.getElementById("sendButton").addEventListener("click", () => {
 });
 
 document.getElementById('logFollowersButton').addEventListener('click', function () {
-    // Send a message to content.js to get followers
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { action: 'getFollowers' }, function (response) {
             const followerUsernames = response.followers;
@@ -37,6 +36,28 @@ document.getElementById('logFollowersButton').addEventListener('click', function
             });
 
             followersListDiv.style.display = 'block';
+        });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const postUsernamesButton = document.getElementById('postUsernamesButton');
+    const postUsernamesList = document.getElementById('postUsernamesList');
+    const postUsernamesUl = document.getElementById('postUsernames');
+
+    postUsernamesButton.addEventListener('click', function () {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { action: 'getPostUsernames' }, function (response) {
+                const userLinks = response.userLinks;
+                postUsernamesUl.innerHTML = '';
+                userLinks.forEach(userLink => {
+                    const li = document.createElement('li');
+                    li.textContent = userLink.username;
+                    postUsernamesUl.appendChild(li);
+                });
+                postUsernamesList.style.display = 'block';
+            });
         });
     });
 });

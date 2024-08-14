@@ -131,7 +131,6 @@ function simulateTyping(message, initialDelay = 2000, typingDelay = 100) {
         }
       };
 
-      // Add initial delay before starting to type
       console.log(`Waiting ${initialDelay}ms before starting to type...`);
       setTimeout(() => typeNextChar(0), initialDelay);
     });
@@ -160,6 +159,41 @@ async function getAllFollowerUsernames() {
 
   await scrollToLoadAll();
   return extractUsernames();
+}
+
+function getUserLinksAndUsernames() {
+  const linkAnchors = document.querySelectorAll('a[role="link"]');
+
+  // List of unwanted usernames
+  const unwantedUsernames = [
+    'Privacy',
+    'Terms',
+    'Locations',
+    'Instagram Lite',
+    'Home',
+    'Explore',
+    'Reels',
+    'Messages',
+    'Profile'
+  ];
+
+  const userLinks = [];
+
+  linkAnchors.forEach(anchor => {
+    const hrefLink = anchor.getAttribute('href');
+    if (hrefLink && hrefLink.startsWith('/') && !hrefLink.includes('?') && !hrefLink.includes('/p/')) {
+      const usernameSpan = anchor.querySelector('span[dir="auto"]');
+      if (usernameSpan) {
+        const username = usernameSpan.innerText;
+
+        if (!unwantedUsernames.includes(username)) {
+          userLinks.push({ href: hrefLink, username: username });
+        }
+      }
+    }
+  });
+
+  return userLinks;
 }
 
 async function runInstagramActions(username, message) {
@@ -251,5 +285,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           sendResponse({ followers: followerUsernames });
       });
       return true;
+  }
+});
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'getPostUsernames') {
+    const userLinks = getUserLinksAndUsernames();
+    sendResponse({ userLinks: userLinks });
   }
 });

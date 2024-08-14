@@ -24,7 +24,7 @@
             cursor: pointer;
             margin-bottom: 10px;
         }
-        #followersList {
+        #followersList, #postUsernamesList {
             max-height: 200px;
             overflow-y: auto;
             border: 1px solid #ccc;
@@ -32,11 +32,11 @@
             margin-top: 10px;
             display: none;
         }
-        #followersList ul {
+        #followersList ul, #postUsernamesList ul {
             list-style-type: none;
             padding: 0;
         }
-        #followersList ul li {
+        #followersList ul li, #postUsernamesList ul li {
             padding: 5px 0;
         }
     </style>
@@ -50,6 +50,11 @@
     <div id="followersList">
         <h3>Followers:</h3>
         <ul id="followers"></ul>
+    </div>
+    <button id="postUsernamesButton">Post Usernames</button>
+    <div id="postUsernamesList">
+        <h3>Post Usernames:</h3>
+        <ul id="postUsernames"></ul>
     </div>
     <script src="./scripts/popup.js"></script>
 </body>
