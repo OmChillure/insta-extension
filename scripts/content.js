@@ -262,6 +262,7 @@ async function runInstagramActions(username, message) {
   }
 }
 
+
 let isProcessing = false;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -294,3 +295,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ userLinks: userLinks });
   }
 });
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "checkAuth") {
+      // This selector is usually where the logged-in user's profile link appears
+      const usernameElement = document.querySelector('a[href^="/"] > div > span');
+
+      let username = null;
+
+      if (usernameElement) {
+          username = usernameElement.textContent;
+      }
+
+      sendResponse({ isLoggedIn: !!username, username: username });
+  }
+});
+
+
+
+
+
+
+
